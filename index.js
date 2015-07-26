@@ -357,7 +357,7 @@ var parseMaterials = function () {
 		// MR: I can't do this in register helpers :(
 		var helperTemplate = function(context, options) {
 			options.hash[id] = _.merge({}, options.hash[id], { content: options.fn(buildContext(context)) });
-			return Handlebars.helpers['material'](id, context, options);
+			return Handlebars.helpers[inflect.singularize(options.keys.materials)](id, context, options);
 		};
 
 		Handlebars.registerHelper(id, function (options) {
