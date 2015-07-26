@@ -355,13 +355,14 @@ var parseMaterials = function () {
 
 		// Also register a helper
 		// MR: I can't do this in register helpers :(
-		var helperTemplate = function(context, options) {
-			options.hash[id] = _.merge({}, options.hash[id], { content: options.fn(buildContext(context)) });
-			return Handlebars.helpers[inflect.singularize(options.keys.materials)](id, context, options);
+		var helperTemplate = function(context, opts) {
+
+			opts.hash[id] = _.merge({}, opts.hash[id], { content: opts.fn(buildContext(context)) });
+			return Handlebars.helpers[inflect.singularize(options.keys.materials)](id, context, opts);
 		};
 
-		Handlebars.registerHelper(id, function (options) {
-			return helperTemplate(this, options);
+		Handlebars.registerHelper(id, function (opts) {
+			return helperTemplate(this, opts);
 		});
 
 
@@ -546,7 +547,7 @@ var registerHelpers = function () {
 	 * @example
 	 * {{material name context}}
 	 */
-	Handlebars.registerHelper(inflect.singularize(options.keys.materials), function (name, context, options) {
+	Handlebars.registerHelper(inflect.singularize(options.keys.materials), function (name, context, opts) {
 
 		// remove leading numbers from name keyword
 		// partials are always registered with the leading numbers removed
@@ -564,7 +565,7 @@ var registerHelpers = function () {
 		}
 
 		// return beautified html with trailing whitespace removed
-		return beautifyHtml(fn(buildContext(context, options.hash)).replace(/^\s+/, ''), options.beautifier);
+		return beautifyHtml(fn(buildContext(context, opts.hash)).replace(/^\s+/, ''), options.beautifier);
 
 	});
 
