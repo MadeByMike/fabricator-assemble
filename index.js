@@ -236,6 +236,7 @@ var buildContext = function (data, hash) {
 };
 
 
+
 /**
  * Convert a file name to title case
  * @param  {String} str
@@ -352,8 +353,19 @@ var parseMaterials = function () {
 		// register the partial
 		Handlebars.registerPartial(id, content);
 
-	});
+		// Also register a helper
+		// MR: I can't do this in register helpers :(
+		var helperTemplate = function(context, options) {
+			options.hash[id] = _.merge({}, options.hash[id], { content: options.fn(buildContext(context)) });
+			return Handlebars.helpers['material'](id, context, options);
+		};
 
+		Handlebars.registerHelper(id, function (options) {
+			return helperTemplate(this, options);
+		});
+
+
+	});
 
 	// sort materials object alphabetically
 	assembly.materials = sortObj(assembly.materials, 'order');
